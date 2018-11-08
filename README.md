@@ -15,3 +15,6 @@ choose several test images and move them into "test_images" directory
 run retrain.py
 
 Then run test.py to see the results
+
+# Result
+SVM: 0.65

@@ -1,2 +1,6 @@
 transfer_learning/*
 !transfer_learning/*.py
+training_images/
+test_images/
+.DS_Store
+.idea/

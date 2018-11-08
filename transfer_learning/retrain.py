@@ -48,9 +48,9 @@ MIN_NUM_IMAGES_REQUIRED_FOR_TESTING = 2
 MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
 
 # path to folders of labeled images
-TRAINING_IMAGES_DIR = os.getcwd() + '/training_images'
+TRAINING_IMAGES_DIR = os.getcwd() + '../training_images'
 
-TEST_IMAGES_DIR = os.getcwd() + "/test_images/"
+TEST_IMAGES_DIR = os.getcwd() + "../test_images"
 
 # where to save the trained graph
 OUTPUT_GRAPH = os.getcwd() + '/' + 'retrained_graph.pb'
@@ -75,10 +75,10 @@ HOW_MANY_TRAINING_STEPS = 4000
 LEARNING_RATE = 0.01
 
 # what percentage of images to use as a test set
-TESTING_PERCENTAGE = 10
+TESTING_PERCENTAGE = 5
 
 # what percentage of images to use as a validation set
-VALIDATION_PERCENTAGE = 10
+VALIDATION_PERCENTAGE = 5
 
 # how often to evaluate the training results
 EVAL_STEP_INTERVAL = 10

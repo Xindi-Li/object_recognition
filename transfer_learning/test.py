@@ -9,7 +9,7 @@ import cv2
 RETRAINED_LABELS_TXT_FILE_LOC = os.getcwd() + "/" + "retrained_labels.txt"
 RETRAINED_GRAPH_PB_FILE_LOC = os.getcwd() + "/" + "retrained_graph.pb"
 
-TEST_IMAGES_DIR = os.getcwd() + "/test_images"
+TEST_IMAGES_DIR = os.getcwd() + "/../test_images"
 
 Color = (0.0, 100.0, 0.0)
 
@@ -173,12 +173,13 @@ def writeResultOnImage(openCVImage, resultText):
     fontFace = cv2.FONT_HERSHEY_DUPLEX
 
     # chose the font size and thickness as a fraction of the image size
-    if imageWidth <= 300:
-        fontScale = 0.4
-    elif imageWidth < 1000:
-        fontScale = 0.7
-    else:
-        fontScale = 1
+    # if imageWidth <= 300:
+    #     fontScale = 0.4
+    # elif imageWidth < 1000:
+    #     fontScale = 0.7
+    # else:
+    #     fontScale = 1
+    fontScale = imageWidth / 800
     fontThickness = 1
 
     # make sure font thickness is an integer, if not, the OpenCV functions that use this may crash
