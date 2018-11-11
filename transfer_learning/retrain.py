@@ -1,4 +1,4 @@
-# retrain.py
+# retrain.py accuracy: 83.9%
 #
 # original file by Google:
 # https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/image_retraining/retrain.py
@@ -48,9 +48,9 @@ MIN_NUM_IMAGES_REQUIRED_FOR_TESTING = 2
 MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
 
 # path to folders of labeled images
-TRAINING_IMAGES_DIR = os.getcwd() + '../training_images'
+TRAINING_IMAGES_DIR = os.getcwd() + '/../training_images'
 
-TEST_IMAGES_DIR = os.getcwd() + "../test_images"
+TEST_IMAGES_DIR = os.getcwd() + "/../test_images"
 
 # where to save the trained graph
 OUTPUT_GRAPH = os.getcwd() + '/' + 'retrained_graph.pb'
@@ -69,13 +69,13 @@ TENSORBOARD_DIR = os.getcwd() + '/' + 'tensorboard_logs'
 
 # how many training steps to run before ending
 # NOTE: original Google default is 4000, use 4000 (or possibly higher) for production grade results
-HOW_MANY_TRAINING_STEPS = 4000
+HOW_MANY_TRAINING_STEPS = 8000
 
 # how large a learning rate to use when training
 LEARNING_RATE = 0.01
 
 # what percentage of images to use as a test set
-TESTING_PERCENTAGE = 5
+TESTING_PERCENTAGE = 10
 
 # what percentage of images to use as a validation set
 VALIDATION_PERCENTAGE = 5
@@ -93,7 +93,7 @@ TEST_BATCH_SIZE = -1
 # How many images to use in an evaluation batch. This validation set is used much more often than the test set, and is an early indicator of how
 # accurate the model is during training. A value of -1 causes the entire validation set to be used, which leads to
 # more stable results across training iterations, but may be slower on large training sets.
-VALIDATION_BATCH_SIZE = 100
+VALIDATION_BATCH_SIZE = -1
 
 # whether to print out a list of all misclassified test images
 PRINT_MISCLASSIFIED_TEST_IMAGES = False

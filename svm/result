@@ -1,0 +1,4 @@
+linear  accuracy: 16.23%
+poly  accuracy: 16.05%
+rbf  accuracy: 0.74%
+sigmoid  accuracy: 0.65%
