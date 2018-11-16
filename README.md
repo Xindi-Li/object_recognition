@@ -39,4 +39,7 @@ rbf  accuracy: 0.74%
 sigmoid  accuracy: 0.65%
 
 ## transfer learning
-83.9%
+10000 training steps: 84.3%
+8000 training steps: 83.9%
+6000 training steps: 83.4%
+4000 training steps: 82.1%
