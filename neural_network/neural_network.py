@@ -1,8 +1,9 @@
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV, cross_val_score
 from imutils import paths
 import numpy as np
-from sklearn.model_selection import GridSearchCV
+import imutils
 import cv2
 import os
 
@@ -13,6 +14,25 @@ def image_to_feature_vector(image, size=(32, 32)):
     return cv2.resize(image, size).flatten()
 
 
+def extract_color_histogram(image, bins=(8, 8, 8)):
+    # extract a 3D color histogram from the HSV color space using
+    # the supplied number of `bins` per channel
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hist = cv2.calcHist([hsv], [0, 1, 2], None, bins,
+                        [0, 180, 0, 256, 0, 256])
+
+    # handle normalizing the histogram if we are using OpenCV 2.4.X
+    if imutils.is_cv2():
+        hist = cv2.normalize(hist)
+
+    # otherwise, perform "in place" normalization in OpenCV 3
+    else:
+        cv2.normalize(hist, hist)
+
+    # return the flattened histogram as the feature vector
+    return hist.flatten()
+
+
 DATA_SET_PATH = '../training_images'
 # grab the list of images that we'll be describing
 print("[INFO] describing images...")
@@ -21,6 +41,7 @@ imagePaths = list(paths.list_images(DATA_SET_PATH))
 # initialize the raw pixel intensities matrix, the features matrix,
 # and labels list
 rawImages = []
+features = []
 labels = []
 
 # loop over the input images
@@ -34,11 +55,13 @@ for (i, imagePath) in enumerate(imagePaths):
     # histogram to characterize the color distribution of the pixels
     # in the image
     pixels = image_to_feature_vector(image)
+    hist = extract_color_histogram(image)
 
     # update the raw images, features, and labels matricies,
     # respectively
     rawImages.append(pixels)
     labels.append(label)
+    features.append(hist)
 
     # show an update every 1,000 images
     if i > 0 and i % 1000 == 0:
@@ -47,6 +70,7 @@ for (i, imagePath) in enumerate(imagePaths):
 # show some information on the memory consumed by the raw images
 # matrix and features matrix
 rawImages = np.array(rawImages)
+features = np.array(features)
 labels = np.array(labels)
 print("[INFO] pixels matrix: {:.2f}MB".format(
     rawImages.nbytes / (1024 * 1000.0)))
@@ -56,15 +80,15 @@ print("[INFO] pixels matrix: {:.2f}MB".format(
 (trainRI, testRI, trainRL, testRL) = train_test_split(
     rawImages, labels, test_size=0.15, random_state=42)
 
+(trainFeat, testFeat, trainLabels, testLabels) = train_test_split(
+    features, labels, test_size=0.15, random_state=42)
+
 # train and evaluate a k-NN classifer on the raw pixel intensities
 print("[INFO] evaluating raw pixel accuracy...")
-parameters = {'n_neighbors': (5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)}
 
-model = KNeighborsClassifier(n_jobs=-1)
-clf = GridSearchCV(model, parameters, cv=5)
-clf.fit(trainRI, trainRL)
-acc = model.score(testRI, testRL)
-print("[INFO] raw pixel accuracy: {:.2f}%".format(acc * 100))
-print(clf.best_estimator_, '\n')
-print(clf.best_score_, '\n')
-print(clf.best_params_, '\n')
+for activ in ['identity', 'logistic', 'tanh', 'relu']:
+    for hidden in [100, 500, 1000, 2000]:
+        model = MLPClassifier(hidden_layer_sizes=(hidden,), max_iter=1000, activation=activ)
+        model.fit(trainFeat, trainLabels)
+        acc = model.score(testFeat, testLabels)
+        print(hidden, " ", activ, " accuracy: {:.2f}%".format(acc * 100))

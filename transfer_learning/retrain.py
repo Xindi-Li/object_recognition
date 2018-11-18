@@ -69,7 +69,7 @@ TENSORBOARD_DIR = os.getcwd() + '/' + 'tensorboard_logs'
 
 # how many training steps to run before ending
 # NOTE: original Google default is 4000, use 4000 (or possibly higher) for production grade results
-HOW_MANY_TRAINING_STEPS = 8000
+HOW_MANY_TRAINING_STEPS = 10000
 
 # how large a learning rate to use when training
 LEARNING_RATE = 0.01
@@ -677,10 +677,6 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
         if dir_name == image_dir:
             continue
         # end if
-
-        # ToDo: This section should be refactored.  The right way to do this would be to get a list of the files that are
-        # ToDo: there then append (extend) those, not to get the name except the extension, then append an extension,
-        # ToDo: this (current) way is error prone of the original file has an upper case or mixed case extension
 
         extensions = ['jpg', 'jpeg']
         file_list = []
