@@ -53,3 +53,6 @@ sigmoid  accuracy: 0.65%
 500   relu  accuracy: 14.16%\
 1000   relu  accuracy: 14.68%\
 2000   relu  accuracy: 15.79%
+
+## CNN
+100 epochs: 24.93%
