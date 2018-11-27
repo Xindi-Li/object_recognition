@@ -60,3 +60,4 @@ sigmoid  accuracy: 0.65%
 
 ## CNN
 100 epochs: 24.93%
+300 epochs: 27.25%
