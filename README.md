@@ -32,6 +32,10 @@ Then run test.py to see the results
 9  neighbors accuracy: 13.33%\
 10  neighbors accuracy: 13.55%
 
+5 fold cross validation
+
+best n_neighbors: 13, best accuracy: 13.20%
+
 ## SVM
 linear  accuracy: 16.23%\
 poly  accuracy: 16.05%\
