@@ -1,6 +1,6 @@
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import GridSearchCV, cross_val_score
+from sklearn.model_selection import GridSearchCV
 from imutils import paths
 import numpy as np
 import imutils
@@ -85,10 +85,14 @@ print("[INFO] pixels matrix: {:.2f}MB".format(
 
 # train and evaluate a k-NN classifer on the raw pixel intensities
 print("[INFO] evaluating raw pixel accuracy...")
+parameters = {'activation': ('identity', 'logistic', 'tanh', 'relu'),
+              'hidden_layer_sizes': [(100,), (500,), (1000,), (2000,)]}
 
-for activ in ['identity', 'logistic', 'tanh', 'relu']:
-    for hidden in [100, 500, 1000, 2000]:
-        model = MLPClassifier(hidden_layer_sizes=(hidden,), max_iter=1000, activation=activ)
-        model.fit(trainFeat, trainLabels)
-        acc = model.score(testFeat, testLabels)
-        print(hidden, " ", activ, " accuracy: {:.2f}%".format(acc * 100))
+model = MLPClassifier(max_iter=1000)
+clf = GridSearchCV(model, parameters, cv=5)
+clf.fit(trainFeat, trainLabels)
+acc = clf.score(testFeat, testLabels)
+print("[INFO] raw pixel accuracy: {:.2f}%".format(acc * 100))
+print(clf.best_estimator_, '\n')
+print(clf.best_score_, '\n')
+print(clf.best_params_, '\n')

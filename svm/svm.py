@@ -58,7 +58,7 @@ print("[INFO] pixels matrix: {:.2f}MB".format(
 
 # train and evaluate a k-NN classifer on the raw pixel intensities
 print("[INFO] evaluating raw pixel accuracy...")
-parameters = {'kernel': ('linear', 'rbf'), 'C': [1, 10]}
+parameters = {'kernel': ('linear', 'rbf', 'poly', 'sigmoid'), 'C': [0.1, 0.5, 1, 5, 10]}
 model = SVC(class_weight='balanced')
 clf = GridSearchCV(model, parameters, cv=5)
 clf.fit(trainRI, trainRL)
@@ -67,5 +67,3 @@ print("[INFO] raw pixel accuracy: {:.2f}%".format(acc * 100))
 print(clf.best_estimator_, '\n')
 print(clf.best_score_, '\n')
 print(clf.best_params_, '\n')
-
-

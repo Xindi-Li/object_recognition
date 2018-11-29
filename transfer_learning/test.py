@@ -18,10 +18,6 @@ Color = (0.0, 100.0, 0.0)
 def main():
     print("starting program . . .")
 
-    if not checkIfNecessaryPathsAndFilesExist():
-        return
-    # end if
-
     # get a list of classifications from the labels file
     classifications = []
     # for each line in the label file . . .
@@ -130,38 +126,9 @@ def main():
         # end for
     # end with
 
-    # write the graph to file so we can view with TensorBoard
-    tfFileWriter = tf.summary.FileWriter(os.getcwd())
-    tfFileWriter.add_graph(sess.graph)
-    tfFileWriter.close()
-
 
 # end main
 
-#######################################################################################################################
-def checkIfNecessaryPathsAndFilesExist():
-    if not os.path.exists(TEST_IMAGES_DIR):
-        print('')
-        print('ERROR: TEST_IMAGES_DIR "' + TEST_IMAGES_DIR + '" does not seem to exist')
-        print('Did you set up the test images?')
-        print('')
-        return False
-    # end if
-
-    if not os.path.exists(RETRAINED_LABELS_TXT_FILE_LOC):
-        print('ERROR: RETRAINED_LABELS_TXT_FILE_LOC "' + RETRAINED_LABELS_TXT_FILE_LOC + '" does not seem to exist')
-        return False
-    # end if
-
-    if not os.path.exists(RETRAINED_GRAPH_PB_FILE_LOC):
-        print('ERROR: RETRAINED_GRAPH_PB_FILE_LOC "' + RETRAINED_GRAPH_PB_FILE_LOC + '" does not seem to exist')
-        return False
-    # end if
-
-    return True
-
-
-# end function
 
 #######################################################################################################################
 def writeResultOnImage(openCVImage, resultText):

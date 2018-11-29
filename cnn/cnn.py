@@ -120,7 +120,7 @@ aug = ImageDataGenerator(rotation_range=30, width_shift_range=0.1,
                          height_shift_range=0.1, shear_range=0.2, zoom_range=0.2,
                          horizontal_flip=True, fill_mode="nearest")
 
-model.fit_generator(aug.flow(trainRI, trainRL, batch_size=256), epochs=100, validation_data=(valRI, valRL))
+model.fit_generator(aug.flow(trainRI, trainRL, batch_size=256), epochs=300, validation_data=(valRI, valRL))
 
 scores = model.evaluate(testRI, testRL)
 print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))

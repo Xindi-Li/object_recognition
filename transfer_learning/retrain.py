@@ -147,10 +147,6 @@ def main():
     # make sure the logging output is visible, see https://github.com/tensorflow/tensorflow/issues/3047
     tf.logging.set_verbosity(tf.logging.INFO)
 
-    if not checkIfNecessaryPathsAndFilesExist():
-        return
-    # end if
-
     # prepare necessary directories that can be used during training
     prepare_file_system()
 
@@ -289,7 +285,7 @@ def main():
                     feed_dict={bottleneck_input: validation_bottlenecks, ground_truth_input: validation_ground_truth})
                 validation_writer.add_summary(validation_summary, i)
                 tf.logging.info('%s: Step %d: Validation accuracy = %.1f%% (N=%d)' % (
-                datetime.now(), i, validation_accuracy * 100, len(validation_bottlenecks)))
+                    datetime.now(), i, validation_accuracy * 100, len(validation_bottlenecks)))
             # end if
 
             # Store intermediate results
@@ -335,107 +331,6 @@ def main():
 
 # end function
 
-#######################################################################################################################
-def checkIfNecessaryPathsAndFilesExist():
-    # if the training directory does not exist, show and error message and bail
-    if not os.path.exists(TRAINING_IMAGES_DIR):
-        print('')
-        print('ERROR: TRAINING_IMAGES_DIR "' + TRAINING_IMAGES_DIR + '" does not seem to exist')
-        print('Did you set up the training images?')
-        print('')
-        return False
-
-    # end if
-
-    # nested class
-    class TrainingSubDir:
-        # constructor
-        def __init__(self):
-            self.loc = ""
-            self.numImages = 0
-        # end constructor
-
-    # end class
-
-    # declare a list of training sub-directories
-    trainingSubDirs = []
-
-    # populate the training sub-directories
-    for dirName in os.listdir(TRAINING_IMAGES_DIR):
-        currentTrainingImagesSubDir = os.path.join(TRAINING_IMAGES_DIR, dirName)
-        if os.path.isdir(currentTrainingImagesSubDir):
-            trainingSubDir = TrainingSubDir()
-            trainingSubDir.loc = currentTrainingImagesSubDir
-            trainingSubDirs.append(trainingSubDir)
-        # end if
-    # end for
-
-    # if no training sub-directories were found, show an error message and return false
-    if len(trainingSubDirs) == 0:
-        print("ERROR: there don't seem to be any training image sub-directories in " + TRAINING_IMAGES_DIR)
-        print("Did you make a separare image sub-directory for each classification type?")
-        return False
-    # end if
-
-    # populate the number of training images in each training sub-directory
-    for trainingSubDir in trainingSubDirs:
-        # count how many images are in the current training sub-directory
-        for fileName in os.listdir(trainingSubDir.loc):
-            if fileName.endswith(".jpg"):
-                trainingSubDir.numImages += 1
-            # end if
-        # end if
-    # end for
-
-    # if any training sub-directory has less than the min required number of training images, show an error message and return false
-    for trainingSubDir in trainingSubDirs:
-        if trainingSubDir.numImages < MIN_NUM_IMAGES_REQUIRED_FOR_TRAINING:
-            print("ERROR: there are less than the required " + str(
-                MIN_NUM_IMAGES_REQUIRED_FOR_TRAINING) + " images in " + trainingSubDir.loc)
-            print("Did you populate each training sub-directory with images?")
-            return False
-        # end if
-    # end for
-
-    # if any training sub-directory has less than the recommended number of training images, show a warning (but don't return false)
-    for trainingSubDir in trainingSubDirs:
-        if trainingSubDir.numImages < MIN_NUM_IMAGES_SUGGESTED_FOR_TRAINING:
-            print("WARNING: there are less than the suggested " + str(
-                MIN_NUM_IMAGES_SUGGESTED_FOR_TRAINING) + " images in " + trainingSubDir.loc)
-            print("More images should be added to this directory for acceptable training results")
-            # note we do not return false here b/c this is a warning, not an error
-        # end if
-    # end for
-
-    # if the test images directory does not exist, show and error message and bail
-    if not os.path.exists(TEST_IMAGES_DIR):
-        print('')
-        print('ERROR: TEST_IMAGES_DIR "' + TEST_IMAGES_DIR + '" does not seem to exist')
-        print('Did you break out some test images?')
-        print('')
-        return False
-    # end if
-
-    # count how many images are in the test images directory
-    numImagesInTestDir = 0
-    for fileName in os.listdir(TEST_IMAGES_DIR):
-        if fileName.endswith(".jpg"):
-            numImagesInTestDir += 1
-        # end if
-    # end for
-
-    # if there are not enough images in the test images directory, show an error and return false
-    if numImagesInTestDir < MIN_NUM_IMAGES_REQUIRED_FOR_TESTING:
-        print("ERROR: there are not at least " + str(
-            MIN_NUM_IMAGES_REQUIRED_FOR_TESTING) + " images in " + TEST_IMAGES_DIR)
-        print("Did you break out some test images?")
-        return False
-    # end if
-
-    return True
-
-
-# end function
 
 #######################################################################################################################
 def prepare_file_system():
@@ -717,7 +612,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
             # that we use to assign it.
             hash_name_hashed = hashlib.sha1(compat.as_bytes(hash_name)).hexdigest()
             percentage_hash = ((int(hash_name_hashed, 16) % (MAX_NUM_IMAGES_PER_CLASS + 1)) * (
-                        100.0 / MAX_NUM_IMAGES_PER_CLASS))
+                    100.0 / MAX_NUM_IMAGES_PER_CLASS))
             if percentage_hash < validation_percentage:
                 validation_images.append(base_name)
             elif percentage_hash < (testing_percentage + validation_percentage):
